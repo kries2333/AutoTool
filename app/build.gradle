@@ -53,6 +53,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+
     implementation project(path: ':automator')
     implementation project(path: ':common')
     implementation project(path: ':autojs')

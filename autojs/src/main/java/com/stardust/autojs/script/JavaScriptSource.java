@@ -95,7 +95,6 @@ public abstract class JavaScriptSource extends ScriptSource {
             return EXECUTION_MODE_NORMAL;
         }
         return EXECUTION_MODE_NORMAL;
-
     }
 
     private int parseExecutionMode(String[] modeStrings) {
