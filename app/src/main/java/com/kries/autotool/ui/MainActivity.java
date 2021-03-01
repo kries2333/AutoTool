@@ -31,7 +31,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        URI uri = URI.create("ws://192.168.0.100:8081/ws?systemId=1221323131231");
+        //
+        URI uri = URI.create("ws://192.168.0.100:8081/ws?uuid=12345678");
+
         JWebsocketClient client = new JWebsocketClient(uri) {
             @Override
             public void onMessage(String message) {
