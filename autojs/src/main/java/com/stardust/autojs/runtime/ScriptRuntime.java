@@ -27,6 +27,7 @@ import com.stardust.autojs.core.looper.Loopers;
 import com.stardust.autojs.runtime.api.Media;
 import com.stardust.autojs.runtime.api.Plugins;
 import com.stardust.autojs.runtime.api.Sensors;
+import com.stardust.autojs.runtime.api.Statistics;
 import com.stardust.autojs.runtime.api.Threads;
 import com.stardust.autojs.runtime.api.Timers;
 import com.stardust.autojs.core.accessibility.UiSelector;
@@ -77,6 +78,7 @@ public class ScriptRuntime {
     public static class Builder {
         private UiHandler mUiHandler;
         private Console mConsole;
+        private Statistics mStatistics;
         private AccessibilityBridge mAccessibilityBridge;
         private Supplier<AbstractShell> mShellSupplier;
         private ScreenCaptureRequester mScreenCaptureRequester;
@@ -94,6 +96,11 @@ public class ScriptRuntime {
 
         public Builder setConsole(Console console) {
             mConsole = console;
+            return this;
+        }
+
+        public Builder setStatistics(Statistics statistics) {
+            mStatistics = statistics;
             return this;
         }
 
@@ -135,6 +142,9 @@ public class ScriptRuntime {
 
     @ScriptVariable
     public final Console console;
+
+    @ScriptVariable
+    public final Statistics statistics;
 
     @ScriptVariable
     public final SimpleActionAutomator automator;
@@ -209,6 +219,7 @@ public class ScriptRuntime {
         Context context = uiHandler.getContext();
         app = builder.mAppUtils;
         console = builder.mConsole;
+        statistics = builder.mStatistics;
         accessibilityBridge = builder.mAccessibilityBridge;
         mShellSupplier = builder.mShellSupplier;
         ui = new UI(context, this);

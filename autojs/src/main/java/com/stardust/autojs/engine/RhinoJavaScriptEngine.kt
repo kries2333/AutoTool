@@ -22,6 +22,7 @@ import java.io.Reader
 import java.net.URI
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.jvm.Throws
 
 /**
  * Created by Stardust on 2017/4/2.

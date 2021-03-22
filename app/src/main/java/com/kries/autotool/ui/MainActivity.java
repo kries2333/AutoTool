@@ -2,12 +2,20 @@ package com.kries.autotool.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.renderscript.Script;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.kries.autotool.R;
 import com.kries.autotool.autojs.AutoJs;
@@ -16,6 +24,8 @@ import com.kries.autotool.database.DatabaseHelper;
 import com.kries.autotool.model.script.ScriptFile;
 import com.kries.autotool.model.script.Scripts;
 import com.kries.autotool.network.JWebsocketClient;
+import com.kries.autotool.network.MessageController;
+import com.kries.autotool.tool.ActivityUtil;
 import com.stardust.app.GlobalAppContext;
 import com.stardust.autojs.core.storage.LocalStorage;
 
@@ -30,66 +40,79 @@ public class MainActivity extends Activity {
 
     private String clientId;
     private String scrpitName;
-    private URI    uri;
+
     private String TAG = "MainActivity";
-    private String Url = "ws://192.168.0.107:8089/android";
+
     private DatabaseHelper helper;
+    private SharedPreferences sharedPreferences;
+    private MessageController controller;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.uri = URI.create(this.Url);
+        sharedPreferences = getSharedPreferences("data",Context.MODE_PRIVATE);
+
         this.helper = new DatabaseHelper(getApplicationContext());
+        this.controller = new MessageController(getApplicationContext(), this.helper);
+
+        EditText editToken = findViewById(R.id.editTextToken);
+        EditText editDeviceName = findViewById(R.id.editTextDeviceName);
+
+        editToken.setText(GetAccount());
+        editDeviceName.setText(GetDeviceName());
 
         Button btn = (Button) this.findViewById(R.id.start);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editToken = findViewById(R.id.editTextToken);
-                EditText editDeviceName = findViewById(R.id.editTextDeviceName);
-
-
-
-                Context ctx = getApplicationContext();
-                String imei = uity.getIMEI(ctx);
-                String androidOs = uity.getSystemVersion();
-                String model = uity.getSystemModel();
-                String memory = uity.getMemory(ctx);
-                String display_x = uity.getDisplayX(ctx);
-                String display_y = uity.getDisplayY(ctx);
-                String token = editToken.getText().toString();
-                String deviceName = editDeviceName.getText().toString();
-
-                if (imei == "") return;
-
-                String deviceId = uity.ComputeDeviceId(token, deviceName, androidOs, model, imei);
-
-                try {
-                    JSONObject data = new JSONObject();
-                    data.putOpt("appid", 101);
-                    data.putOpt("token", token);
-                    data.putOpt("device_id", deviceId);
-                    data.putOpt("device_name", deviceName);
-                    data.putOpt("android_os", androidOs);
-                    data.putOpt("model", model);
-                    data.putOpt("imei", imei);
-                    data.putOpt("memory", memory);
-                    data.putOpt("display_x", display_x);
-                    data.putOpt("display_y", display_y);
-
-                    JWebsocketClient client = new JWebsocketClient(uri, data);
-                    try {
-                        client.connect();
-                    } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                controller.Connent(editToken.getText().toString(), editDeviceName.getText().toString());
+//                startService(intent);
             }
         });
+    }
+
+    private void SetAccoutData(String token, String device_name) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("token", token);
+        editor.putString("device_name", device_name);
+        editor.commit();
+    }
+
+    private String GetAccount() {
+        return sharedPreferences.getString("token", "");
+    }
+
+    private String GetDeviceName() {
+        return sharedPreferences.getString("device_name", "");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void startFloatingService() {
+        if (ActivityUtil.isServiceWork(this, "com.demon.suspensionbox.FloatingService")) {//防止重复启动
+            Toast.makeText(this, "已启动！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!Settings.canDrawOverlays(this)) {
+            Toast.makeText(this, "当前无权限，请授权", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), 0);
+        } else {
+            startService(intent);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (!Settings.canDrawOverlays(this)) {
+                Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show();
+                startService(intent);
+            }
+        }
     }
 }

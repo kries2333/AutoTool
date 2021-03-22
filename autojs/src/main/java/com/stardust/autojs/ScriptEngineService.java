@@ -17,6 +17,7 @@ import com.stardust.autojs.execution.ScriptExecutionTask;
 import com.stardust.autojs.execution.SimpleScriptExecutionListener;
 import com.stardust.autojs.runtime.ScriptRuntime;
 import com.stardust.autojs.runtime.api.Console;
+import com.stardust.autojs.runtime.api.Statistics;
 import com.stardust.autojs.script.JavaScriptSource;
 import com.stardust.autojs.script.ScriptSource;
 import com.stardust.lang.ThreadCompat;
@@ -91,6 +92,7 @@ public class ScriptEngineService {
     private final Context mContext;
     private UiHandler mUiHandler;
     private final Console mGlobalConsole;
+    private final Statistics mGlobalStatistics;
     private final ScriptEngineManager mScriptEngineManager;
     private final EngineLifecycleObserver mEngineLifecycleObserver = new EngineLifecycleObserver() {
 
@@ -108,6 +110,7 @@ public class ScriptEngineService {
         mContext = mUiHandler.getContext();
         mScriptEngineManager = builder.mScriptEngineManager;
         mGlobalConsole = builder.mGlobalConsole;
+        mGlobalStatistics = builder.mGlobalStatistics;
         mScriptEngineManager.setEngineLifecycleCallback(mEngineLifecycleObserver);
         mScriptExecutionObserver.registerScriptExecutionListener(GLOBAL_LISTENER);
         EVENT_BUS.register(this);

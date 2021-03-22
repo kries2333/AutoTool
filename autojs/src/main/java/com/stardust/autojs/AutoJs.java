@@ -17,6 +17,8 @@ import com.stardust.autojs.core.console.ConsoleImpl;
 import com.stardust.autojs.core.image.capture.ScreenCaptureRequestActivity;
 import com.stardust.autojs.core.image.capture.ScreenCaptureRequester;
 import com.stardust.autojs.core.record.accessibility.AccessibilityActionRecorder;
+import com.stardust.autojs.core.statistics.GlobalStatistics;
+import com.stardust.autojs.core.statistics.StatisticsImpl;
 import com.stardust.autojs.core.util.Shell;
 import com.stardust.autojs.engine.LoopBasedJavaScriptEngine;
 import com.stardust.autojs.engine.RootAutomatorEngine;
@@ -58,6 +60,7 @@ public abstract class AutoJs {
     private final ScreenCaptureRequester mScreenCaptureRequester = new ScreenCaptureRequesterImpl();
     private final ScriptEngineService mScriptEngineService;
     private final GlobalConsole mGlobalConsole;
+    private final GlobalStatistics mGlobalStatistics;
 
 
     protected AutoJs(final Application application) {
@@ -67,6 +70,7 @@ public abstract class AutoJs {
         mUiHandler = new UiHandler(mContext);
         mAppUtils = createAppUtils(mContext);
         mGlobalConsole = createGlobalConsole();
+        mGlobalStatistics = createGlobalStatistics();
         mNotificationObserver = new AccessibilityNotificationObserver(mContext);
         mActivityInfoProvider = new ActivityInfoProvider(mContext);
         mScriptEngineService = buildScriptEngineService();
@@ -80,6 +84,10 @@ public abstract class AutoJs {
 
     protected GlobalConsole createGlobalConsole() {
         return new GlobalConsole(mUiHandler);
+    }
+
+    protected GlobalStatistics createGlobalStatistics() {
+        return new GlobalStatistics(mUiHandler);
     }
 
     protected void init() {
@@ -113,6 +121,7 @@ public abstract class AutoJs {
         return new ScriptEngineServiceBuilder()
                 .uiHandler(mUiHandler)
                 .globalConsole(mGlobalConsole)
+                .globalStatistics(mGlobalStatistics)
                 .engineManger(mScriptEngineManager)
                 .build();
     }
@@ -135,6 +144,7 @@ public abstract class AutoJs {
     protected ScriptRuntime createRuntime() {
         return new ScriptRuntime.Builder()
                 .setConsole(new ConsoleImpl(mUiHandler, mGlobalConsole))
+                .setStatistics(new StatisticsImpl(mUiHandler, mGlobalStatistics))
                 .setScreenCaptureRequester(mScreenCaptureRequester)
                 .setAccessibilityBridge(new AccessibilityBridgeImpl(mUiHandler))
                 .setUiHandler(mUiHandler)
