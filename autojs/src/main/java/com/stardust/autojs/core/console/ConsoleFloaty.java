@@ -98,16 +98,6 @@ public class ConsoleFloaty extends ResizableExpandableFloaty.AbstractResizableEx
 
     private void setWindowOperationIconListeners(View view, final ResizableExpandableFloatyWindow window) {
         view.findViewById(R.id.close).setOnClickListener(v -> window.close());
-        view.findViewById(R.id.move_or_resize).setOnClickListener(v -> {
-            if (mMoveCursor.getVisibility() == View.VISIBLE) {
-                mMoveCursor.setVisibility(View.GONE);
-                mResizer.setVisibility(View.GONE);
-            } else {
-                mMoveCursor.setVisibility(View.VISIBLE);
-                mResizer.setVisibility(View.VISIBLE);
-            }
-        });
-        view.findViewById(R.id.minimize).setOnClickListener(v -> window.collapse());
     }
 
     @Nullable

@@ -94,16 +94,6 @@ public class ConsoleView extends FrameLayout implements ConsoleImpl.LogListener 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mLogListRecyclerView.setLayoutManager(manager);
         mLogListRecyclerView.setAdapter(new Adapter());
-        initEditText();
-        initSubmitButton();
-    }
-
-    private void initSubmitButton() {
-        final Button submit = findViewById(R.id.submit);
-        submit.setOnClickListener(v -> {
-            CharSequence input = mEditText.getText();
-            submitInput(input);
-        });
     }
 
     private void submitInput(CharSequence input) {
@@ -113,20 +103,6 @@ public class ConsoleView extends FrameLayout implements ConsoleImpl.LogListener 
         if (mConsole.submitInput(input)) {
             mEditText.setText("");
         }
-    }
-
-    private void initEditText() {
-        mEditText = findViewById(R.id.input);
-        mEditText.setFocusableInTouchMode(true);
-        mInputContainer = findViewById(R.id.input_container);
-        OnClickListener listener = v -> {
-            if (mWindow != null) {
-                mWindow.requestWindowFocus();
-                mEditText.requestFocus();
-            }
-        };
-        mEditText.setOnClickListener(listener);
-        mInputContainer.setOnClickListener(listener);
     }
 
     public void setConsole(ConsoleImpl console) {

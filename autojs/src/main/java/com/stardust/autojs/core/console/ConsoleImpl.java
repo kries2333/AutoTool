@@ -15,6 +15,7 @@ import com.stardust.autojs.runtime.exception.ScriptInterruptedException;
 import com.stardust.autojs.util.FloatingPermission;
 import com.stardust.enhancedfloaty.FloatyService;
 import com.stardust.enhancedfloaty.ResizableExpandableFloatyWindow;
+import com.stardust.util.ScreenMetrics;
 import com.stardust.util.UiHandler;
 import com.stardust.util.ViewUtil;
 
@@ -80,6 +81,8 @@ public class ConsoleImpl extends AbstractConsole {
     }
 
     public ConsoleImpl(UiHandler uiHandler, Console globalConsole) {
+        mX = 10;
+        mY = 10;
         mUiHandler = uiHandler;
         mConsoleFloaty = new ConsoleFloaty(this);
         mGlobalConsole = globalConsole;

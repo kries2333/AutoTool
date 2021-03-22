@@ -13,6 +13,7 @@ import com.stardust.autojs.runtime.api.Statistics;
 import com.stardust.autojs.util.FloatingPermission;
 import com.stardust.enhancedfloaty.FloatyService;
 import com.stardust.enhancedfloaty.ResizableExpandableFloatyWindow;
+import com.stardust.util.ScreenMetrics;
 import com.stardust.util.UiHandler;
 
 import java.lang.ref.WeakReference;
@@ -35,6 +36,8 @@ public class StatisticsImpl extends AbstractStatistics {
 
     public StatisticsImpl(UiHandler uiHandler, Statistics globalStatistics) {
         Log.d(TAG, "StatisticsImpl");
+        mX = 10;
+        mY = ScreenMetrics.getDeviceScreenHeight() / 2 + 200;
         mUiHandler = uiHandler;
         mStatisticsFloaty = new StatisticsFloaty(this);
         mFloatyWindow = new ResizableExpandableFloatyWindow(mStatisticsFloaty) {
