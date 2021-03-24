@@ -93,11 +93,11 @@ public class ConsoleFloaty extends ResizableExpandableFloaty.AbstractResizableEx
         ConsoleView consoleView = view.findViewById(R.id.console);
         consoleView.setConsole(mConsole);
         consoleView.setWindow(window);
-        initConsoleTitle(view);
+//        initConsoleTitle(view);
     }
 
     private void setWindowOperationIconListeners(View view, final ResizableExpandableFloatyWindow window) {
-        view.findViewById(R.id.close).setOnClickListener(v -> window.close());
+//        view.findViewById(R.id.close).setOnClickListener(v -> window.close());
     }
 
     @Nullable

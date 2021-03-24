@@ -81,8 +81,8 @@ public class ConsoleImpl extends AbstractConsole {
     }
 
     public ConsoleImpl(UiHandler uiHandler, Console globalConsole) {
-        mX = 10;
-        mY = 10;
+        mX = 0;
+        mY = 0;
         mUiHandler = uiHandler;
         mConsoleFloaty = new ConsoleFloaty(this);
         mGlobalConsole = globalConsole;
